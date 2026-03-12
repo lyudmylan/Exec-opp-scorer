@@ -1,0 +1,15 @@
+{
+  "folders": [
+    {
+      "path": "/Users/lyudmylan/Documents/Work/Projects/Executive Opportunity Scorer"
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "**/__pycache__": true
+    },
+    "search.exclude": {
+      "**/__pycache__": true
+    }
+  }
+}

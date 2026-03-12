@@ -1,0 +1,83 @@
+{
+  "company_name": "PipelineFox",
+  "snapshot_date": "2026-03-11",
+  "geography": "Israel",
+  "category": "SaaS",
+  "is_gray_area": false,
+  "company_stage": "Series B",
+  "team_size": 170,
+  "founder_setup": "mixed",
+  "product_complexity": "medium",
+  "engineering_intensity": "high",
+  "employee_growth_6m_pct": 18,
+  "recent_funding_months_ago": 7,
+  "recent_news_sentiment": "positive",
+  "hiring_open_roles": 16,
+  "engineering_roles_open": 7,
+  "senior_roles_open": 2,
+  "geo_expansion": true,
+  "existing_exec_layer": "strong",
+  "leadership_gap": "low",
+  "senior_churn": "none",
+  "layoff_signal": "none",
+  "funding_slowdown": "none",
+  "hiring_freeze_signal": "none",
+  "founder_instability": "none",
+  "pmf_uncertainty": "low",
+  "evidence": {
+    "stage": [
+      {
+        "source_type": "funding",
+        "label": "Series B recap",
+        "url": "https://example.com/pipelinefox-series-b",
+        "observed_at": "2026-03-02",
+        "note": "Series B funding within the last year."
+      }
+    ],
+    "team_size_band": [
+      {
+        "source_type": "company-profile",
+        "label": "Headcount estimate",
+        "url": "https://example.com/pipelinefox-headcount",
+        "observed_at": "2026-03-03",
+        "note": "Around 170 employees."
+      }
+    ],
+    "existing_exec_layer": [
+      {
+        "source_type": "leadership",
+        "label": "Leadership page",
+        "url": "https://example.com/pipelinefox-leadership",
+        "observed_at": "2026-03-02",
+        "note": "CTO and VP Engineering both listed."
+      }
+    ],
+    "leadership_gap": [
+      {
+        "source_type": "research",
+        "label": "Org review",
+        "url": "https://example.com/pipelinefox-org",
+        "observed_at": "2026-03-03",
+        "note": "Leadership stack already looks mature."
+      }
+    ],
+    "hiring_volume": [
+      {
+        "source_type": "jobs",
+        "label": "Careers",
+        "url": "https://example.com/pipelinefox-careers",
+        "observed_at": "2026-03-06",
+        "note": "16 open roles."
+      }
+    ],
+    "engineering_hiring_mix": [
+      {
+        "source_type": "jobs",
+        "label": "Engineering roles",
+        "url": "https://example.com/pipelinefox-careers",
+        "observed_at": "2026-03-06",
+        "note": "7 engineering openings."
+      }
+    ]
+  }
+}

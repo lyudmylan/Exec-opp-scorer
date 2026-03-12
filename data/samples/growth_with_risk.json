@@ -1,0 +1,65 @@
+{
+  "company_name": "NexaGrid",
+  "snapshot_date": "2026-03-11",
+  "geography": "Israel",
+  "category": "SaaS",
+  "is_gray_area": false,
+  "company_stage": "Series B",
+  "team_size": 110,
+  "founder_setup": "non_technical",
+  "product_complexity": "high",
+  "engineering_intensity": "high",
+  "employee_growth_6m_pct": 28,
+  "recent_funding_months_ago": 8,
+  "recent_news_sentiment": "mixed",
+  "hiring_open_roles": 14,
+  "engineering_roles_open": 8,
+  "senior_roles_open": 3,
+  "geo_expansion": true,
+  "existing_exec_layer": "none",
+  "leadership_gap": "high",
+  "senior_churn": "medium",
+  "layoff_signal": "medium",
+  "funding_slowdown": "medium",
+  "hiring_freeze_signal": "low",
+  "founder_instability": "low",
+  "pmf_uncertainty": "medium",
+  "evidence": {
+    "employee_growth": [
+      {
+        "source_type": "research",
+        "label": "Headcount trend",
+        "url": "https://example.com/nexagrid-growth",
+        "observed_at": "2026-03-03",
+        "note": "Growth remains positive."
+      }
+    ],
+    "leadership_gap": [
+      {
+        "source_type": "research",
+        "label": "Org review",
+        "url": "https://example.com/nexagrid-org",
+        "observed_at": "2026-03-05",
+        "note": "Directors appear stretched without an exec layer."
+      }
+    ],
+    "layoff_signal": [
+      {
+        "source_type": "news",
+        "label": "Selective reduction",
+        "url": "https://example.com/nexagrid-layoffs",
+        "observed_at": "2026-02-28",
+        "note": "Company reduced some go-to-market roles."
+      }
+    ],
+    "funding_slowdown": [
+      {
+        "source_type": "research",
+        "label": "Funding timeline review",
+        "url": "https://example.com/nexagrid-funding",
+        "observed_at": "2026-03-01",
+        "note": "No follow-on since last round; timeline lengthening."
+      }
+    ]
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "company_name": "QuietLedger",
+  "snapshot_date": "2026-03-11",
+  "geography": "Israel",
+  "category": "SaaS",
+  "is_gray_area": false,
+  "company_stage": "Series A",
+  "team_size": 55,
+  "founder_setup": null,
+  "product_complexity": null,
+  "engineering_intensity": null,
+  "employee_growth_6m_pct": null,
+  "recent_funding_months_ago": null,
+  "recent_news_sentiment": null,
+  "hiring_open_roles": 2,
+  "engineering_roles_open": 1,
+  "senior_roles_open": 0,
+  "geo_expansion": null,
+  "existing_exec_layer": null,
+  "leadership_gap": null,
+  "senior_churn": null,
+  "layoff_signal": null,
+  "funding_slowdown": null,
+  "hiring_freeze_signal": null,
+  "founder_instability": null,
+  "pmf_uncertainty": null,
+  "evidence": {
+    "stage": [
+      {
+        "source_type": "funding",
+        "label": "Old funding mention",
+        "url": "https://example.com/quietledger-series-a",
+        "observed_at": "2025-04-01",
+        "note": "Historical Series A mention."
+      }
+    ],
+    "hiring_volume": [
+      {
+        "source_type": "jobs",
+        "label": "Careers page",
+        "url": "https://example.com/quietledger-careers",
+        "observed_at": "2026-03-07",
+        "note": "Only 2 open roles."
+      }
+    ]
+  }
+}

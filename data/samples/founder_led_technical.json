@@ -1,0 +1,56 @@
+{
+  "company_name": "CoreOrbit",
+  "snapshot_date": "2026-03-11",
+  "geography": "Israel",
+  "category": "SaaS",
+  "is_gray_area": false,
+  "company_stage": "Series A",
+  "team_size": 48,
+  "founder_setup": "technical",
+  "product_complexity": "high",
+  "engineering_intensity": "high",
+  "employee_growth_6m_pct": 12,
+  "recent_funding_months_ago": 10,
+  "recent_news_sentiment": "positive",
+  "hiring_open_roles": 6,
+  "engineering_roles_open": 4,
+  "senior_roles_open": 0,
+  "geo_expansion": false,
+  "existing_exec_layer": "partial",
+  "leadership_gap": "low",
+  "senior_churn": "none",
+  "layoff_signal": "none",
+  "funding_slowdown": "none",
+  "hiring_freeze_signal": "none",
+  "founder_instability": "none",
+  "pmf_uncertainty": "low",
+  "evidence": {
+    "founder_setup": [
+      {
+        "source_type": "leadership",
+        "label": "Founder bios",
+        "url": "https://example.com/coreorbit-founders",
+        "observed_at": "2026-03-04",
+        "note": "CEO and CTO are both technical founders."
+      }
+    ],
+    "leadership_gap": [
+      {
+        "source_type": "research",
+        "label": "Org review",
+        "url": "https://example.com/coreorbit-org",
+        "observed_at": "2026-03-05",
+        "note": "Founders still directly cover engineering leadership."
+      }
+    ],
+    "recent_funding": [
+      {
+        "source_type": "funding",
+        "label": "Series A announcement",
+        "url": "https://example.com/coreorbit-series-a",
+        "observed_at": "2026-03-01",
+        "note": "Raised Series A 10 months ago."
+      }
+    ]
+  }
+}

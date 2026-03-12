@@ -1,0 +1,61 @@
+{
+  "company_name": "SignalMint",
+  "snapshot_date": "2026-03-11",
+  "geography": "Israel",
+  "category": "SaaS",
+  "is_gray_area": false,
+  "company_stage": "Series B",
+  "team_size": 90,
+  "founder_setup": "mixed",
+  "product_complexity": "medium",
+  "engineering_intensity": "high",
+  "employee_growth_6m_pct": 20,
+  "recent_funding_months_ago": 11,
+  "recent_news_sentiment": "mixed",
+  "hiring_open_roles": 10,
+  "engineering_roles_open": 5,
+  "senior_roles_open": 1,
+  "geo_expansion": false,
+  "existing_exec_layer": "partial",
+  "leadership_gap": "medium",
+  "senior_churn": "low",
+  "layoff_signal": "none",
+  "funding_slowdown": "low",
+  "hiring_freeze_signal": "none",
+  "founder_instability": "none",
+  "pmf_uncertainty": "low",
+  "evidence": {
+    "employee_growth": [
+      {
+        "source_type": "research",
+        "label": "Growth estimate one",
+        "url": "https://example.com/signalmint-growth-1",
+        "observed_at": "2026-03-04",
+        "note": "Headcount appears to be growing quickly."
+      },
+      {
+        "source_type": "research",
+        "label": "Growth estimate two",
+        "url": "https://example.com/signalmint-growth-2",
+        "observed_at": "2026-03-04",
+        "note": "Headcount looks flat in the last quarter."
+      },
+      {
+        "source_type": "research",
+        "label": "Growth estimate three",
+        "url": "https://example.com/signalmint-growth-3",
+        "observed_at": "2026-03-04",
+        "note": "Signals are mixed across public sources."
+      }
+    ],
+    "recent_news_momentum": [
+      {
+        "source_type": "news",
+        "label": "Partnership announcement",
+        "url": "https://example.com/signalmint-news",
+        "observed_at": "2026-02-25",
+        "note": "Partnership expansion, but customer metrics remain unclear."
+      }
+    ]
+  }
+}

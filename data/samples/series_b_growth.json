@@ -1,0 +1,167 @@
+{
+  "company_name": "ScaleMesh",
+  "snapshot_date": "2026-03-11",
+  "geography": "Israel",
+  "category": "SaaS",
+  "is_gray_area": false,
+  "company_stage": "Series B",
+  "team_size": 140,
+  "founder_setup": "non_technical",
+  "product_complexity": "high",
+  "engineering_intensity": "high",
+  "employee_growth_6m_pct": 32,
+  "recent_funding_months_ago": 5,
+  "recent_news_sentiment": "positive",
+  "hiring_open_roles": 24,
+  "engineering_roles_open": 13,
+  "senior_roles_open": 4,
+  "geo_expansion": true,
+  "existing_exec_layer": "none",
+  "leadership_gap": "high",
+  "senior_churn": "low",
+  "layoff_signal": "none",
+  "funding_slowdown": "none",
+  "hiring_freeze_signal": "none",
+  "founder_instability": "none",
+  "pmf_uncertainty": "low",
+  "evidence": {
+    "stage": [
+      {
+        "source_type": "funding",
+        "label": "Series B announcement",
+        "url": "https://example.com/scalemesh-series-b",
+        "observed_at": "2026-03-01",
+        "published_at": "2025-10-10",
+        "note": "Raised Series B to expand platform and go-to-market."
+      }
+    ],
+    "team_size_band": [
+      {
+        "source_type": "company-profile",
+        "label": "Linked team size snapshot",
+        "url": "https://example.com/scalemesh-headcount",
+        "observed_at": "2026-03-05",
+        "note": "Headcount near 140."
+      }
+    ],
+    "employee_growth": [
+      {
+        "source_type": "research",
+        "label": "Headcount growth estimate",
+        "url": "https://example.com/scalemesh-growth",
+        "observed_at": "2026-03-05",
+        "note": "Approx 32 percent employee growth over 6 months."
+      }
+    ],
+    "product_complexity": [
+      {
+        "source_type": "website",
+        "label": "Platform overview",
+        "url": "https://example.com/scalemesh-platform",
+        "observed_at": "2026-03-02",
+        "note": "Multi-product enterprise workflow platform."
+      }
+    ],
+    "engineering_intensity": [
+      {
+        "source_type": "jobs",
+        "label": "Engineering careers",
+        "url": "https://example.com/scalemesh-careers",
+        "observed_at": "2026-03-07",
+        "note": "Strong engineering footprint across platform, data, and infrastructure."
+      }
+    ],
+    "founder_setup": [
+      {
+        "source_type": "leadership",
+        "label": "Founding team page",
+        "url": "https://example.com/scalemesh-founders",
+        "observed_at": "2026-03-02",
+        "note": "CEO and CRO founding team without technical founder."
+      }
+    ],
+    "existing_exec_layer": [
+      {
+        "source_type": "leadership",
+        "label": "Leadership page",
+        "url": "https://example.com/scalemesh-leadership",
+        "observed_at": "2026-03-03",
+        "note": "No CTO or VP Engineering listed."
+      }
+    ],
+    "leadership_gap": [
+      {
+        "source_type": "research",
+        "label": "Org review",
+        "url": "https://example.com/scalemesh-org",
+        "observed_at": "2026-03-06",
+        "note": "Engineering directors appear to report close to founders."
+      }
+    ],
+    "recent_funding": [
+      {
+        "source_type": "news",
+        "label": "Funding press release",
+        "url": "https://example.com/scalemesh-series-b",
+        "observed_at": "2026-03-01",
+        "published_at": "2025-10-10",
+        "note": "Fresh capital for scale."
+      }
+    ],
+    "recent_news_momentum": [
+      {
+        "source_type": "news",
+        "label": "New US office",
+        "url": "https://example.com/scalemesh-us-office",
+        "observed_at": "2026-02-20",
+        "published_at": "2026-02-14",
+        "note": "Opened a new US office for enterprise growth."
+      }
+    ],
+    "hiring_volume": [
+      {
+        "source_type": "jobs",
+        "label": "Careers page",
+        "url": "https://example.com/scalemesh-careers",
+        "observed_at": "2026-03-07",
+        "note": "24 open roles."
+      }
+    ],
+    "engineering_hiring_mix": [
+      {
+        "source_type": "jobs",
+        "label": "Engineering roles",
+        "url": "https://example.com/scalemesh-careers",
+        "observed_at": "2026-03-07",
+        "note": "13 engineering openings."
+      }
+    ],
+    "senior_hiring_signal": [
+      {
+        "source_type": "jobs",
+        "label": "Senior roles",
+        "url": "https://example.com/scalemesh-careers",
+        "observed_at": "2026-03-07",
+        "note": "Several director and head-level roles open."
+      }
+    ],
+    "geo_expansion": [
+      {
+        "source_type": "news",
+        "label": "Expansion note",
+        "url": "https://example.com/scalemesh-us-office",
+        "observed_at": "2026-02-20",
+        "note": "Expanding beyond Israel."
+      }
+    ],
+    "layoff_signal": [
+      {
+        "source_type": "research",
+        "label": "No layoffs found",
+        "url": "https://example.com/scalemesh-research",
+        "observed_at": "2026-03-05",
+        "note": "No recent layoffs identified."
+      }
+    ]
+  }
+}

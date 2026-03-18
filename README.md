@@ -2,11 +2,15 @@
 
 Executive Opportunity Scorer is a traceable research tool for evaluating whether an Israeli SaaS startup is likely to need a VP R&D or equivalent within the next 12 months.
 
+The current product is optimized for quick manual triage, not full analyst research. A human should be able to enter a few facts they can gather quickly, while richer signals remain a future automated-research layer.
+
 The v1 product is intentionally narrow:
 - Public-web signals only
 - One company at a time
 - Explainable weighted heuristics instead of ML
 - Output optimized for a VP R&D candidate deciding whether to pursue outreach
+- Manual input limited to realistic quick-triage facts
+- Future online research and LLM enrichment kept out of the manual form
 
 ## What It Produces
 - `fit score`: likelihood the company will need a VP R&D soon
@@ -21,11 +25,12 @@ The v1 product is intentionally narrow:
 - `docs/best_practices.md`: implementation and operating guidelines
 - `docs/code_review.md`: reviewer checklist for scoring and traceability changes
 - `.github/workflows/ci.yml`: GitHub Actions test pipeline
-- `executive_opportunity_scorer/`: scoring engine and CLI
+- `data/ui_spec/company_form.json`: schema-driven UI form definition for people and agents
+- `executive_opportunity_scorer/`: scoring engine, CLI, and local web server
 - `data/samples/`: sample company inputs for calibration and demos
 - `tests/`: acceptance and unit tests
 
-## Usage
+## CLI Usage
 Run against a sample file:
 
 ```bash
@@ -43,6 +48,27 @@ List sample scenarios:
 ```bash
 python3 -m executive_opportunity_scorer.cli list-samples
 ```
+
+## Local UI
+Start the local schema-driven UI:
+
+```bash
+python3 -m executive_opportunity_scorer.cli serve-ui --host 127.0.0.1 --port 8000
+```
+
+Then open [http://127.0.0.1:8000](http://127.0.0.1:8000).
+
+The browser form is rendered from `data/ui_spec/company_form.json`.
+
+In the current manual workflow, the intended core inputs are:
+- company name
+- latest funding round if known
+- approximate team size if known
+- whether a CTO or VP Eng layer already exists
+- rough hiring signal from open roles
+- optional links and notes
+
+Signals that require deeper research or judgment are intentionally not part of the manual intake anymore. They are reserved for a future automated enrichment flow.
 
 ## Testing
 

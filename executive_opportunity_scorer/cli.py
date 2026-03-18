@@ -6,6 +6,7 @@ from pathlib import Path
 
 from .engine import score_company, score_to_dict
 from .models import CompanyInput
+from .webapp import run_server
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -17,6 +18,11 @@ def build_parser() -> argparse.ArgumentParser:
     score_parser.add_argument("--format", choices=("text", "json"), default="text")
 
     subparsers.add_parser("list-samples", help="List bundled sample files.")
+
+    ui_parser = subparsers.add_parser("serve-ui", help="Run the schema-driven local UI.")
+    ui_parser.add_argument("--host", default="127.0.0.1")
+    ui_parser.add_argument("--port", type=int, default=8000)
+
     return parser
 
 
@@ -28,6 +34,10 @@ def main() -> int:
         sample_dir = Path(__file__).resolve().parent.parent / "data" / "samples"
         for path in sorted(sample_dir.glob("*.json")):
             print(path.name)
+        return 0
+
+    if args.command == "serve-ui":
+        run_server(args.host, args.port)
         return 0
 
     payload = json.loads(Path(args.input_file).read_text())

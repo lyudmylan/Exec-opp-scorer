@@ -1,0 +1,149 @@
+{
+  "title": "Executive Opportunity Scorer",
+  "description": "Quick triage for a startup opportunity. Manual entry is limited to a few facts a human can gather quickly; richer signals are reserved for future automated research.",
+  "sections": [
+    {
+      "id": "quick_triage",
+      "title": "Quick Triage",
+      "fields": [
+        {
+          "id": "company_name",
+          "label": "Company name",
+          "type": "text",
+          "required": true,
+          "placeholder": "Example: monday.com",
+          "help": "The company being evaluated."
+        },
+        {
+          "id": "company_url",
+          "label": "Company URL",
+          "type": "text",
+          "required": false,
+          "default": "",
+          "placeholder": "https://company.com or LinkedIn URL",
+          "help": "Optional starting point for future automated research."
+        },
+        {
+          "id": "snapshot_date",
+          "label": "Snapshot date",
+          "type": "date",
+          "required": false,
+          "help": "Defaults to today."
+        },
+        {
+          "id": "company_stage",
+          "label": "Latest funding round",
+          "type": "select",
+          "required": false,
+          "default": "",
+          "options": ["", "Pre-seed", "Seed", "Series A", "Series B", "Series C", "Series D", "Growth", "Public"],
+          "evidence_key": "stage",
+          "help": "Best known funding round. Leave blank if unknown."
+        },
+        {
+          "id": "team_size",
+          "label": "Approx team size",
+          "type": "number",
+          "required": false,
+          "default": null,
+          "evidence_key": "team_size_band",
+          "help": "Approximate total employee count."
+        },
+        {
+          "id": "existing_exec_layer",
+          "label": "Current engineering leadership",
+          "type": "select",
+          "required": false,
+          "default": "",
+          "options": ["", "none", "partial", "strong"],
+          "evidence_key": "existing_exec_layer",
+          "help": "Use `strong` if a CTO/VP Eng layer already exists."
+        },
+        {
+          "id": "hiring_open_roles",
+          "label": "Open roles",
+          "type": "number",
+          "required": false,
+          "default": null,
+          "evidence_key": "hiring_volume",
+          "help": "Approximate total open roles."
+        },
+        {
+          "id": "engineering_roles_open",
+          "label": "Engineering open roles",
+          "type": "number",
+          "required": false,
+          "default": null,
+          "evidence_key": "engineering_hiring_mix",
+          "help": "Approximate engineering openings."
+        }
+      ]
+    },
+    {
+      "id": "notes",
+      "title": "Optional Notes",
+      "fields": [
+        {
+          "id": "source_urls_text",
+          "label": "Source links",
+          "type": "textarea",
+          "required": false,
+          "default": "",
+          "placeholder": "Paste 1-3 URLs, one per line",
+          "help": "Optional links for later verification or future automated research."
+        },
+        {
+          "id": "research_notes",
+          "label": "Research notes",
+          "type": "textarea",
+          "required": false,
+          "default": "",
+          "placeholder": "Anything notable you found quickly",
+          "help": "Freeform notes. Not scored directly in v1."
+        }
+      ]
+    },
+    {
+      "id": "scope_defaults",
+      "title": "Scope Defaults",
+      "fields": [
+        {
+          "id": "geography",
+          "label": "Geography",
+          "type": "select",
+          "required": false,
+          "default": "Israel",
+          "options": ["Israel", "Other"],
+          "help": "V1 supports Israel only."
+        },
+        {
+          "id": "category",
+          "label": "Category",
+          "type": "select",
+          "required": false,
+          "default": "SaaS",
+          "options": ["SaaS", "Other"],
+          "help": "V1 supports SaaS only."
+        },
+        {
+          "id": "is_gray_area",
+          "label": "Gray-area company",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "help": "Optional override for excluded sectors."
+        }
+      ]
+    }
+  ],
+  "evidence_entry": {
+    "fields": [
+      {"id": "source_type", "label": "Source type", "type": "text", "required": true, "placeholder": "funding, jobs, leadership, website"},
+      {"id": "label", "label": "Label", "type": "text", "required": true, "placeholder": "Leadership page"},
+      {"id": "url", "label": "URL", "type": "text", "required": true, "placeholder": "https://..."},
+      {"id": "observed_at", "label": "Observed at", "type": "date", "required": true},
+      {"id": "published_at", "label": "Published at", "type": "date", "required": false},
+      {"id": "note", "label": "Note", "type": "textarea", "required": false, "placeholder": "Short summary of the evidence"}
+    ]
+  }
+}

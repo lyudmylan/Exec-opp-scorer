@@ -35,11 +35,11 @@ The product now separates:
 
 Current manual inputs are limited to a small set of factual fields:
 - company name
+- optional company URL
 - latest funding round if known
-- approximate team size if known
-- current engineering leadership layer
-- rough hiring counts
-- optional links and freeform notes
+- approximate total employee count if known
+- one or more current engineering leadership titles
+- optional source links
 
 Signals that require heavier research or subjective judgment should not be manually entered in v1. If they are used later, they should be populated by an automated research layer or derived from stronger evidence.
 
@@ -63,7 +63,7 @@ Every signal has:
 | Signal | Source Type | Freshness | Missing Data | Direction | Weight | Rationale |
 | --- | --- | --- | --- | --- | --- | --- |
 | `founder_setup` | future automated research | 365 | lowers confidence | fit positive for non-technical founders | 7 | Non-technical founding teams often need stronger R&D leadership earlier. |
-| `existing_exec_layer` | manual quick-triage or leadership page | 120 | lowers confidence | fit negative if strong CTO/VP Eng exists | 14 | A mature executive layer reduces near-term need. |
+| `existing_exec_layer` | derived from selected leadership titles or leadership page | 120 | lowers confidence | fit negative if strong CTO/VP Eng exists | 14 | A mature executive layer reduces near-term need. |
 | `leadership_gap` | derived from multiple signals, not direct manual input | 120 | lowers confidence | fit positive | 14 | Clear gap between founders/directors and org scale is one of the strongest triggers. |
 | `senior_churn` | future automated research | 180 | lowers confidence | risk positive | 12 | Senior instability can indicate opportunity risk or replacement dynamics. |
 
@@ -72,8 +72,8 @@ Every signal has:
 | --- | --- | --- | --- | --- | --- | --- |
 | `recent_funding` | future automated research | 240 | neutral | fit positive | 10 | New capital often funds org build-out. |
 | `recent_news_momentum` | derived or future automated research | 120 | lowers confidence | fit positive for expansion signals, risk positive for negative news | 7 | Expansion and market traction support leadership investment. |
-| `hiring_volume` | manual quick-triage or careers page | 60 | lowers confidence | fit positive for broad hiring | 9 | Hiring acceleration signals scaling pressure. |
-| `engineering_hiring_mix` | manual quick-triage or careers page | 60 | lowers confidence | fit positive for engineering-heavy mix | 10 | Engineering-heavy growth supports a VP R&D need. |
+| `hiring_volume` | future automated research | 60 | lowers confidence | fit positive for broad hiring | 9 | Hiring acceleration signals scaling pressure. |
+| `engineering_hiring_mix` | future automated research | 60 | lowers confidence | fit positive for engineering-heavy mix | 10 | Engineering-heavy growth supports a VP R&D need. |
 | `senior_hiring_signal` | future automated research | 90 | lowers confidence | fit positive | 8 | Senior-function build-out often happens in parallel with executive layering. |
 | `geo_expansion` | future automated research | 180 | lowers confidence | fit positive | 5 | Multi-site growth increases coordination demands. |
 

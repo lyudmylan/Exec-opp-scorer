@@ -1,6 +1,6 @@
 {
   "title": "Executive Opportunity Scorer",
-  "description": "Quick triage for a startup opportunity. Manual entry is limited to a few facts a human can gather quickly; richer signals are reserved for future automated research.",
+  "description": "Quick triage for a startup opportunity. Manual entry is limited to a few facts a human can gather quickly; the rest is reserved for future automated research.",
   "sections": [
     {
       "id": "quick_triage",
@@ -26,9 +26,10 @@
         {
           "id": "snapshot_date",
           "label": "Snapshot date",
-          "type": "date",
+          "type": "text",
           "required": false,
-          "help": "Defaults to today."
+          "ui_hidden": true,
+          "help": "Defaults to the current timestamp."
         },
         {
           "id": "company_stage",
@@ -37,45 +38,24 @@
           "required": false,
           "default": "",
           "options": ["", "Pre-seed", "Seed", "Series A", "Series B", "Series C", "Series D", "Growth", "Public"],
-          "evidence_key": "stage",
           "help": "Best known funding round. Leave blank if unknown."
         },
         {
           "id": "team_size",
-          "label": "Approx team size",
+          "label": "Approximate total employee count",
           "type": "number",
           "required": false,
           "default": null,
-          "evidence_key": "team_size_band",
           "help": "Approximate total employee count."
         },
         {
-          "id": "existing_exec_layer",
+          "id": "current_engineering_leadership",
           "label": "Current engineering leadership",
-          "type": "select",
+          "type": "multiselect",
           "required": false,
-          "default": "",
-          "options": ["", "none", "partial", "strong"],
-          "evidence_key": "existing_exec_layer",
-          "help": "Use `strong` if a CTO/VP Eng layer already exists."
-        },
-        {
-          "id": "hiring_open_roles",
-          "label": "Open roles",
-          "type": "number",
-          "required": false,
-          "default": null,
-          "evidence_key": "hiring_volume",
-          "help": "Approximate total open roles."
-        },
-        {
-          "id": "engineering_roles_open",
-          "label": "Engineering open roles",
-          "type": "number",
-          "required": false,
-          "default": null,
-          "evidence_key": "engineering_hiring_mix",
-          "help": "Approximate engineering openings."
+          "default": [],
+          "options": ["Co-Founder & CTO", "CTO", "VP R&D", "VP Engineering", "Head of R&D", "Head of Engineering"],
+          "help": "Select one or more leadership titles that already exist."
         }
       ]
     },
@@ -91,38 +71,65 @@
           "default": "",
           "placeholder": "Paste 1-3 URLs, one per line",
           "help": "Optional links for later verification or future automated research."
-        },
-        {
-          "id": "research_notes",
-          "label": "Research notes",
-          "type": "textarea",
-          "required": false,
-          "default": "",
-          "placeholder": "Anything notable you found quickly",
-          "help": "Freeform notes. Not scored directly in v1."
         }
       ]
     },
     {
-      "id": "scope_defaults",
-      "title": "Scope Defaults",
+      "id": "automation_defaults",
+      "title": "Automation Defaults",
       "fields": [
+        {
+          "id": "approx_rd_size",
+          "label": "Approx R&D size",
+          "type": "number",
+          "required": false,
+          "default": null,
+          "ui_hidden": true,
+          "help": "Reserved for future automation."
+        },
+        {
+          "id": "existing_exec_layer",
+          "label": "Existing executive layer",
+          "type": "text",
+          "required": false,
+          "default": "",
+          "ui_hidden": true,
+          "help": "Derived from selected leadership roles."
+        },
+        {
+          "id": "hiring_open_roles",
+          "label": "Open roles",
+          "type": "number",
+          "required": false,
+          "default": null,
+          "ui_hidden": true,
+          "help": "Reserved for future automation."
+        },
+        {
+          "id": "engineering_roles_open",
+          "label": "Engineering open roles",
+          "type": "number",
+          "required": false,
+          "default": null,
+          "ui_hidden": true,
+          "help": "Reserved for future automation."
+        },
         {
           "id": "geography",
           "label": "Geography",
-          "type": "select",
+          "type": "text",
           "required": false,
           "default": "Israel",
-          "options": ["Israel", "Other"],
+          "ui_hidden": true,
           "help": "V1 supports Israel only."
         },
         {
           "id": "category",
           "label": "Category",
-          "type": "select",
+          "type": "text",
           "required": false,
           "default": "SaaS",
-          "options": ["SaaS", "Other"],
+          "ui_hidden": true,
           "help": "V1 supports SaaS only."
         },
         {
@@ -131,19 +138,10 @@
           "type": "boolean",
           "required": false,
           "default": false,
+          "ui_hidden": true,
           "help": "Optional override for excluded sectors."
         }
       ]
     }
-  ],
-  "evidence_entry": {
-    "fields": [
-      {"id": "source_type", "label": "Source type", "type": "text", "required": true, "placeholder": "funding, jobs, leadership, website"},
-      {"id": "label", "label": "Label", "type": "text", "required": true, "placeholder": "Leadership page"},
-      {"id": "url", "label": "URL", "type": "text", "required": true, "placeholder": "https://..."},
-      {"id": "observed_at", "label": "Observed at", "type": "date", "required": true},
-      {"id": "published_at", "label": "Published at", "type": "date", "required": false},
-      {"id": "note", "label": "Note", "type": "textarea", "required": false, "placeholder": "Short summary of the evidence"}
-    ]
-  }
+  ]
 }

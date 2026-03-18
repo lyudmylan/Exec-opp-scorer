@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import unittest
-from datetime import date
+from datetime import datetime
 
 from executive_opportunity_scorer.webapp import build_template_from_spec, coerce_submission, load_ui_spec
 
@@ -10,38 +10,26 @@ class WebAppTests(unittest.TestCase):
     def test_template_contains_known_keys(self) -> None:
         spec = load_ui_spec()
         template = build_template_from_spec(spec)
-        self.assertEqual(template["snapshot_date"], date.today().isoformat())
+        self.assertTrue(template["snapshot_date"].startswith(datetime.now().date().isoformat()))
         self.assertEqual(template["geography"], "Israel")
         self.assertEqual(template["category"], "SaaS")
-        self.assertIn("stage", template["evidence"])
-        self.assertIn("team_size_band", template["evidence"])
+        self.assertEqual(template["hiring_open_roles"], None)
+        self.assertEqual(template["engineering_roles_open"], None)
 
     def test_submission_coercion_handles_partial_values(self) -> None:
         spec = load_ui_spec()
         payload = {
             "company_name": "TestCo",
-            "geography": "Israel",
-            "category": "SaaS",
-            "is_gray_area": False,
             "team_size": "120",
             "source_urls_text": "https://example.com/testco-headcount",
-            "evidence": {
-                "team_size_band": [
-                    {
-                        "source_type": "research",
-                        "label": "Headcount review",
-                        "url": "https://example.com/testco-headcount",
-                        "observed_at": "2026-03-10",
-                        "note": "Around 120 employees."
-                    }
-                ]
-            }
+            "current_engineering_leadership": ["Co-Founder & CTO", "VP Engineering"],
         }
         normalized = coerce_submission(spec, payload)
-        self.assertEqual(normalized["snapshot_date"], date.today().isoformat())
+        self.assertTrue(normalized["snapshot_date"].startswith(datetime.now().date().isoformat()))
         self.assertEqual(normalized["team_size"], 120)
         self.assertEqual(normalized["source_urls_text"], "https://example.com/testco-headcount")
-        self.assertEqual(normalized["evidence"]["team_size_band"][0]["label"], "Headcount review")
+        self.assertEqual(normalized["existing_exec_layer"], "strong")
+        self.assertEqual(normalized["current_engineering_leadership"], ["Co-Founder & CTO", "VP Engineering"])
 
     def test_submission_requires_mandatory_fields(self) -> None:
         spec = load_ui_spec()
@@ -53,24 +41,48 @@ class WebAppTests(unittest.TestCase):
                 },
             )
 
-    def test_submission_rejects_incomplete_evidence_rows(self) -> None:
+    def test_single_founder_cto_maps_to_partial_exec_layer(self) -> None:
         spec = load_ui_spec()
-        with self.assertRaisesRegex(Exception, "observed_at"):
-            coerce_submission(
-                spec,
-                {
-                    "company_name": "TestCo",
-                    "evidence": {
-                        "stage": [
-                            {
-                                "source_type": "funding",
-                                "label": "Funding announcement",
-                                "url": "https://example.com/funding"
-                            }
-                        ]
-                    },
-                },
-            )
+        normalized = coerce_submission(
+            spec,
+            {
+                "company_name": "FounderLedCo",
+                "current_engineering_leadership": ["Co-Founder & CTO"],
+            },
+        )
+        self.assertEqual(normalized["existing_exec_layer"], "partial")
+
+    def test_single_cto_maps_to_strong_exec_layer(self) -> None:
+        spec = load_ui_spec()
+        normalized = coerce_submission(
+            spec,
+            {
+                "company_name": "ExecCo",
+                "current_engineering_leadership": ["CTO"],
+            },
+        )
+        self.assertEqual(normalized["existing_exec_layer"], "strong")
+
+    def test_founder_cto_plus_head_maps_to_strong_exec_layer(self) -> None:
+        spec = load_ui_spec()
+        normalized = coerce_submission(
+            spec,
+            {
+                "company_name": "ScaledCo",
+                "current_engineering_leadership": ["Co-Founder & CTO", "Head of Engineering"],
+            },
+        )
+        self.assertEqual(normalized["existing_exec_layer"], "strong")
+
+    def test_no_engineering_leadership_maps_to_none(self) -> None:
+        spec = load_ui_spec()
+        normalized = coerce_submission(
+            spec,
+            {
+                "company_name": "OpenSlotCo",
+            },
+        )
+        self.assertEqual(normalized["existing_exec_layer"], "none")
 
 
 if __name__ == "__main__":

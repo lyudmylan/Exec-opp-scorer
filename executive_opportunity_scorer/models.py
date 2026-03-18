@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import date
+from datetime import datetime
 from typing import Any
 
 
@@ -25,6 +26,8 @@ class CompanyInput:
     company_url: str | None = None
     research_notes: str | None = None
     source_urls_text: str | None = None
+    current_engineering_leadership: list[str] | None = None
+    approx_rd_size: int | None = None
     company_stage: str | None = None
     team_size: int | None = None
     founder_setup: str | None = None
@@ -87,4 +90,6 @@ class ScoreResult:
 
 
 def parse_iso_date(value: str) -> date:
+    if "T" in value:
+        return datetime.fromisoformat(value).date()
     return date.fromisoformat(value)

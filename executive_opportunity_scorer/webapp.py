@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import asdict
-from datetime import date
+from datetime import datetime
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -59,12 +59,17 @@ def coerce_submission(spec: dict[str, Any], payload: dict[str, Any]) -> dict[str
                     evidence_key,
                 )
 
+    if "current_engineering_leadership" in normalized:
+        normalized["existing_exec_layer"] = _derive_exec_layer(
+            normalized["current_engineering_leadership"]
+        )
+
     return normalized
 
 
 def _default_value(field: dict[str, Any]) -> Any:
     if field.get("id") == "snapshot_date":
-        return date.today().isoformat()
+        return datetime.now().isoformat(timespec="seconds")
     return field.get("default")
 
 
@@ -95,7 +100,35 @@ def _coerce_value(field: dict[str, Any], raw_value: Any) -> Any:
             return False
         return None
 
+    if field_type == "multiselect":
+        if raw_value is None:
+            return []
+        if isinstance(raw_value, list):
+            return [str(value) for value in raw_value]
+        text = str(raw_value).strip()
+        if not text:
+            return []
+        return [item.strip() for item in text.split(",") if item.strip()]
+
     return raw_value
+
+
+def _derive_exec_layer(roles: Any) -> str | None:
+    if not roles:
+        return "none"
+    selected = {str(role).strip() for role in roles if str(role).strip()}
+    if not selected:
+        return "none"
+    has_founder_cto = "Co-Founder & CTO" in selected
+    has_cto = "CTO" in selected
+    has_vp_or_head = bool(selected & {"VP R&D", "VP Engineering", "Head of R&D", "Head of Engineering"})
+    if has_cto:
+        return "strong"
+    if has_founder_cto and has_vp_or_head:
+        return "strong"
+    if has_founder_cto:
+        return "partial"
+    return "none"
 
 
 def _normalize_evidence_items(items: list[dict[str, Any]], field_defs: list[dict[str, Any]], evidence_key: str) -> list[dict[str, Any]]:

@@ -22,6 +22,9 @@ class CompanyInput:
     geography: str
     category: str
     is_gray_area: bool
+    company_url: str | None = None
+    research_notes: str | None = None
+    source_urls_text: str | None = None
     company_stage: str | None = None
     team_size: int | None = None
     founder_setup: str | None = None

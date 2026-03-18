@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Executive Opportunity Scorer</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <main class="layout">
+      <section class="hero">
+        <p class="eyebrow">Schema-driven intake</p>
+        <h1>Executive Opportunity Scorer</h1>
+        <p class="hero-copy">
+          Enter partial real-world research, attach evidence to any signal, and score the company with the same JSON spec that agents can reuse later.
+        </p>
+        <div class="hero-actions">
+          <button id="load-template" type="button">Load blank template</button>
+          <button id="load-sample" type="button">Load demo values</button>
+        </div>
+      </section>
+
+      <section class="panel panel-form">
+        <div class="panel-header">
+          <h2>Input</h2>
+          <p>The form below is rendered from the JSON UI spec.</p>
+        </div>
+        <form id="dynamic-form"></form>
+        <div class="panel-actions">
+          <button id="score-button" type="button">Score company</button>
+        </div>
+      </section>
+
+      <section class="panel panel-output">
+        <div class="panel-header">
+          <h2>Result</h2>
+          <p>Fit, risk, confidence, explanation, and captured sources.</p>
+        </div>
+        <div id="status" class="status muted">Load the form and submit a company to see results.</div>
+        <div id="result-card" class="result-card hidden"></div>
+        <div class="json-panels">
+          <div>
+            <h3>Normalized payload</h3>
+            <pre id="normalized-json">{}</pre>
+          </div>
+          <div>
+            <h3>Score result</h3>
+            <pre id="result-json">{}</pre>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="/app.js" defer></script>
+  </body>
+</html>

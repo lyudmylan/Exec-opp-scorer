@@ -7,6 +7,14 @@ from typing import Iterable
 from .models import CompanyInput, Evidence, ScoreResult, SignalResult, parse_iso_date
 from .rules import SIGNAL_RULES
 
+CORE_CONFIDENCE_SIGNALS = (
+    "stage",
+    "team_size_band",
+    "existing_exec_layer",
+    "hiring_volume",
+    "engineering_hiring_mix",
+)
+
 
 def clamp(value: float, minimum: int = 0, maximum: int = 100) -> int:
     return int(round(max(minimum, min(maximum, value))))
@@ -343,12 +351,30 @@ def _score_pmf_uncertainty(company: CompanyInput) -> SignalResult:
 
 
 def _compute_confidence(company: CompanyInput, signals: list[SignalResult]) -> int:
-    total = len(signals)
-    populated = sum(1 for signal in signals if signal.value not in (None, "", []))
-    baseline = 100.0 * (populated / total)
-    freshness_adjustment = sum(signal.confidence_delta for signal in signals)
+    signal_map = {signal.name: signal for signal in signals}
+    populated_core = sum(
+        1
+        for name in CORE_CONFIDENCE_SIGNALS
+        if signal_map[name].value not in (None, "", [])
+    )
+    baseline = 35.0 + (45.0 * (populated_core / len(CORE_CONFIDENCE_SIGNALS)))
+    freshness_adjustment = sum(
+        signal_map[name].confidence_delta
+        for name in CORE_CONFIDENCE_SIGNALS
+        if signal_map[name].value not in (None, "", [])
+    )
+    enrichment_bonus = min(
+        10.0,
+        2.0
+        * sum(
+            1
+            for signal in signals
+            if signal.name not in CORE_CONFIDENCE_SIGNALS
+            and signal.value not in (None, "", [])
+        ),
+    )
     conflict_penalty = _source_conflict_penalty(company)
-    return clamp(baseline + freshness_adjustment - conflict_penalty)
+    return clamp(baseline + freshness_adjustment + enrichment_bonus - conflict_penalty)
 
 
 def _source_conflict_penalty(company: CompanyInput) -> float:

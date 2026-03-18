@@ -28,6 +28,21 @@ Excluded:
 
 All scores are normalized to `0-100`.
 
+## Input Strategy
+The product now separates:
+- manual quick-triage inputs that a human can gather quickly
+- future automated enrichment that may come from online research or LLM-assisted synthesis
+
+Current manual inputs are limited to a small set of factual fields:
+- company name
+- latest funding round if known
+- approximate team size if known
+- current engineering leadership layer
+- rough hiring counts
+- optional links and freeform notes
+
+Signals that require heavier research or subjective judgment should not be manually entered in v1. If they are used later, they should be populated by an automated research layer or derived from stronger evidence.
+
 ## Signal Catalog
 Every signal has:
 - source type
@@ -38,51 +53,51 @@ Every signal has:
 ### Company Fundamentals
 | Signal | Source Type | Freshness | Missing Data | Direction | Weight | Rationale |
 | --- | --- | --- | --- | --- | --- | --- |
-| `stage` | structured input/public funding source | 730 | neutral | fit positive for Seed to Series C | 6 | Mid-stage startups often need leadership layers to scale. |
-| `team_size_band` | structured input/public company profile | 365 | lowers confidence | fit positive for 40-250 employees | 8 | Companies that are too small or too large are less likely to fit the target hiring pattern. |
-| `employee_growth` | public employee trend/research input | 180 | lowers confidence | fit positive for strong growth, risk positive for decline | 10 | Headcount acceleration is a leading indicator of organizational complexity. |
-| `product_complexity` | reviewer or public evidence | 365 | lowers confidence | fit positive | 6 | Multi-product or platform companies need stronger engineering leadership. |
-| `engineering_intensity` | jobs, GitHub, product language | 180 | lowers confidence | fit positive | 8 | Large engineering scope often precedes executive layering. |
+| `stage` | manual quick-triage or public funding source | 730 | neutral | fit positive for Seed to Series C | 6 | Mid-stage startups often need leadership layers to scale. |
+| `team_size_band` | manual quick-triage or public company profile | 365 | lowers confidence | fit positive for 40-250 employees | 8 | Companies that are too small or too large are less likely to fit the target hiring pattern. |
+| `employee_growth` | future automated research | 180 | lowers confidence | fit positive for strong growth, risk positive for decline | 10 | Headcount acceleration is a leading indicator of organizational complexity. |
+| `product_complexity` | derived or future automated research | 365 | lowers confidence | fit positive | 6 | Multi-product or platform companies need stronger engineering leadership. |
+| `engineering_intensity` | derived or future automated research | 180 | lowers confidence | fit positive | 8 | Large engineering scope often precedes executive layering. |
 
 ### Leadership Setup
 | Signal | Source Type | Freshness | Missing Data | Direction | Weight | Rationale |
 | --- | --- | --- | --- | --- | --- | --- |
-| `founder_setup` | website/LinkedIn-style public profiles | 365 | lowers confidence | fit positive for non-technical founders | 7 | Non-technical founding teams often need stronger R&D leadership earlier. |
-| `existing_exec_layer` | leadership page/public profiles | 120 | lowers confidence | fit negative if strong CTO/VP Eng exists | 14 | A mature executive layer reduces near-term need. |
-| `leadership_gap` | inferred from org structure | 120 | lowers confidence | fit positive | 14 | Clear gap between founders/directors and org scale is one of the strongest triggers. |
-| `senior_churn` | news/public profiles | 180 | lowers confidence | risk positive | 12 | Senior instability can indicate opportunity risk or replacement dynamics. |
+| `founder_setup` | future automated research | 365 | lowers confidence | fit positive for non-technical founders | 7 | Non-technical founding teams often need stronger R&D leadership earlier. |
+| `existing_exec_layer` | manual quick-triage or leadership page | 120 | lowers confidence | fit negative if strong CTO/VP Eng exists | 14 | A mature executive layer reduces near-term need. |
+| `leadership_gap` | derived from multiple signals, not direct manual input | 120 | lowers confidence | fit positive | 14 | Clear gap between founders/directors and org scale is one of the strongest triggers. |
+| `senior_churn` | future automated research | 180 | lowers confidence | risk positive | 12 | Senior instability can indicate opportunity risk or replacement dynamics. |
 
 ### Market and Activity Signals
 | Signal | Source Type | Freshness | Missing Data | Direction | Weight | Rationale |
 | --- | --- | --- | --- | --- | --- | --- |
-| `recent_funding` | public funding/news | 240 | neutral | fit positive | 10 | New capital often funds org build-out. |
-| `recent_news_momentum` | press/news | 120 | lowers confidence | fit positive for expansion signals, risk positive for negative news | 7 | Expansion and market traction support leadership investment. |
-| `hiring_volume` | careers page/job boards | 60 | lowers confidence | fit positive for broad hiring | 9 | Hiring acceleration signals scaling pressure. |
-| `engineering_hiring_mix` | careers page/job boards | 60 | lowers confidence | fit positive for engineering-heavy mix | 10 | Engineering-heavy growth supports a VP R&D need. |
-| `senior_hiring_signal` | jobs/news | 90 | lowers confidence | fit positive | 8 | Senior-function build-out often happens in parallel with executive layering. |
-| `geo_expansion` | news/jobs/company site | 180 | lowers confidence | fit positive | 5 | Multi-site growth increases coordination demands. |
+| `recent_funding` | future automated research | 240 | neutral | fit positive | 10 | New capital often funds org build-out. |
+| `recent_news_momentum` | derived or future automated research | 120 | lowers confidence | fit positive for expansion signals, risk positive for negative news | 7 | Expansion and market traction support leadership investment. |
+| `hiring_volume` | manual quick-triage or careers page | 60 | lowers confidence | fit positive for broad hiring | 9 | Hiring acceleration signals scaling pressure. |
+| `engineering_hiring_mix` | manual quick-triage or careers page | 60 | lowers confidence | fit positive for engineering-heavy mix | 10 | Engineering-heavy growth supports a VP R&D need. |
+| `senior_hiring_signal` | future automated research | 90 | lowers confidence | fit positive | 8 | Senior-function build-out often happens in parallel with executive layering. |
+| `geo_expansion` | future automated research | 180 | lowers confidence | fit positive | 5 | Multi-site growth increases coordination demands. |
 
 ### Risk Signals
 | Signal | Source Type | Freshness | Missing Data | Direction | Weight | Rationale |
 | --- | --- | --- | --- | --- | --- | --- |
-| `layoff_signal` | news/public statements | 240 | neutral | risk positive | 16 | Layoffs strongly reduce opportunity quality. |
-| `funding_slowdown` | public funding timeline | 365 | lowers confidence | risk positive | 10 | Stalled financing can freeze senior hiring. |
-| `hiring_freeze_signal` | jobs/news | 90 | lowers confidence | risk positive | 13 | A hiring freeze is a direct warning signal. |
-| `founder_instability` | news/public signals | 180 | lowers confidence | risk positive | 12 | Founder churn or conflict reduces attractiveness. |
-| `pmf_uncertainty` | news/reviewer assessment | 180 | lowers confidence | risk positive | 8 | Weak traction reduces leadership hiring urgency. |
+| `layoff_signal` | future automated research | 240 | neutral | risk positive | 16 | Layoffs strongly reduce opportunity quality. |
+| `funding_slowdown` | derived or future automated research | 365 | lowers confidence | risk positive | 10 | Stalled financing can freeze senior hiring. |
+| `hiring_freeze_signal` | future automated research | 90 | lowers confidence | risk positive | 13 | A hiring freeze is a direct warning signal. |
+| `founder_instability` | future automated research | 180 | lowers confidence | risk positive | 12 | Founder churn or conflict reduces attractiveness. |
+| `pmf_uncertainty` | derived or future automated research | 180 | lowers confidence | risk positive | 8 | Weak traction reduces leadership hiring urgency. |
 
 ## Confidence Rules
 Confidence combines:
-- field coverage
+- coverage of core quick-triage fields
 - evidence freshness
-- evidence presence for high-weight signals
+- optional enrichment breadth
 - source agreement
 
-Baseline confidence is the ratio of populated signals over total tracked signals. It is then adjusted:
-- subtract for stale evidence
+Baseline confidence should not assume a human will populate the full signal catalog manually. It is anchored to the core quick-triage fields and then adjusted:
+- subtract for stale evidence on populated core signals
 - subtract for source conflicts
-- subtract when high-weight signals are missing
-- add a small bonus when multiple fresh sources agree
+- add a small bonus when enrichment adds additional supported signals
+- avoid penalizing the user simply because automated-research-only fields are still empty
 
 ## Recommendation Thresholds
 - `Pursue now`: fit >= 65, risk <= 45, confidence >= 55

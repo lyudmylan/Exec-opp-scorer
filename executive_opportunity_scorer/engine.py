@@ -357,7 +357,7 @@ def _compute_confidence(company: CompanyInput, signals: list[SignalResult]) -> i
     )
     baseline = 35.0 + (45.0 * (populated_core / len(CORE_CONFIDENCE_SIGNALS)))
     freshness_adjustment = sum(
-        signal_map[name].confidence_delta
+        max(0.0, signal_map[name].confidence_delta)
         for name in CORE_CONFIDENCE_SIGNALS
         if signal_map[name].value not in (None, "", [])
     )

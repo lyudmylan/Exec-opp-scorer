@@ -52,6 +52,38 @@ class WebAppTests(unittest.TestCase):
         )
         self.assertEqual(normalized["existing_exec_layer"], "partial")
 
+    def test_single_cto_maps_to_strong_exec_layer(self) -> None:
+        spec = load_ui_spec()
+        normalized = coerce_submission(
+            spec,
+            {
+                "company_name": "ExecCo",
+                "current_engineering_leadership": ["CTO"],
+            },
+        )
+        self.assertEqual(normalized["existing_exec_layer"], "strong")
+
+    def test_founder_cto_plus_head_maps_to_strong_exec_layer(self) -> None:
+        spec = load_ui_spec()
+        normalized = coerce_submission(
+            spec,
+            {
+                "company_name": "ScaledCo",
+                "current_engineering_leadership": ["Co-Founder & CTO", "Head of Engineering"],
+            },
+        )
+        self.assertEqual(normalized["existing_exec_layer"], "strong")
+
+    def test_no_engineering_leadership_maps_to_none(self) -> None:
+        spec = load_ui_spec()
+        normalized = coerce_submission(
+            spec,
+            {
+                "company_name": "OpenSlotCo",
+            },
+        )
+        self.assertEqual(normalized["existing_exec_layer"], "none")
+
 
 if __name__ == "__main__":
     unittest.main()

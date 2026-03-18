@@ -115,17 +115,20 @@ def _coerce_value(field: dict[str, Any], raw_value: Any) -> Any:
 
 def _derive_exec_layer(roles: Any) -> str | None:
     if not roles:
-        return None
+        return "none"
     selected = {str(role).strip() for role in roles if str(role).strip()}
     if not selected:
-        return None
-    if selected == {"Co-Founder & CTO"}:
+        return "none"
+    has_founder_cto = "Co-Founder & CTO" in selected
+    has_cto = "CTO" in selected
+    has_vp_or_head = bool(selected & {"VP R&D", "VP Engineering", "Head of R&D", "Head of Engineering"})
+    if has_cto:
+        return "strong"
+    if has_founder_cto and has_vp_or_head:
+        return "strong"
+    if has_founder_cto:
         return "partial"
-    if len(selected) >= 2:
-        return "strong"
-    if selected & {"CTO", "VP R&D", "VP Engineering"}:
-        return "strong"
-    return "partial"
+    return "none"
 
 
 def _normalize_evidence_items(items: list[dict[str, Any]], field_defs: list[dict[str, Any]], evidence_key: str) -> list[dict[str, Any]]:

@@ -11,8 +11,6 @@ CORE_CONFIDENCE_SIGNALS = (
     "stage",
     "team_size_band",
     "existing_exec_layer",
-    "hiring_volume",
-    "engineering_hiring_mix",
 )
 
 

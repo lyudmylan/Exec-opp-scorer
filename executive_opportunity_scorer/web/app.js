@@ -31,6 +31,11 @@ async function init() {
 function renderForm(spec) {
   form.innerHTML = "";
   spec.sections.forEach((section) => {
+    const visibleFields = section.fields.filter((field) => !field.ui_hidden);
+    if (!visibleFields.length) {
+      return;
+    }
+
     const sectionNode = document.createElement("section");
     sectionNode.className = "section";
 
@@ -41,7 +46,7 @@ function renderForm(spec) {
     const grid = document.createElement("div");
     grid.className = "section-grid";
 
-    section.fields.forEach((field) => {
+    visibleFields.forEach((field) => {
       const fieldNode = document.createElement("div");
       fieldNode.className = "field";
       fieldNode.dataset.fieldId = field.id;
@@ -64,7 +69,7 @@ function renderForm(spec) {
 
     sectionNode.appendChild(grid);
 
-    const evidenceFields = section.fields.filter((field) => field.evidence_key);
+    const evidenceFields = visibleFields.filter((field) => field.evidence_key);
     if (evidenceFields.length) {
       const evidenceWrap = document.createElement("div");
       evidenceWrap.className = "section";
@@ -97,6 +102,24 @@ function buildFieldInput(field) {
       select.value = String(field.default);
     }
     return select;
+  }
+
+  if (field.type === "multiselect") {
+    const wrap = document.createElement("div");
+    wrap.id = field.id;
+    wrap.className = "multi-select";
+    field.options.forEach((option) => {
+      const label = document.createElement("label");
+      label.className = "multi-select-option";
+      const input = document.createElement("input");
+      input.type = "checkbox";
+      input.value = option;
+      input.dataset.multiValue = option;
+      label.appendChild(input);
+      label.appendChild(document.createTextNode(option));
+      wrap.appendChild(label);
+    });
+    return wrap;
   }
 
   if (field.type === "textarea") {
@@ -198,6 +221,9 @@ function collectPayload() {
   uiSpec.sections.forEach((section) => {
     section.fields.forEach((field) => {
       const element = document.getElementById(field.id);
+      if (!element) {
+        return;
+      }
       payload[field.id] = readFieldValue(field, element);
 
       if (field.evidence_key) {
@@ -225,6 +251,9 @@ function readFieldValue(field, element) {
   if (field.type === "boolean") {
     if (element.value === "") return null;
     return element.value === "true";
+  }
+  if (field.type === "multiselect") {
+    return Array.from(element.querySelectorAll('input[type="checkbox"]:checked')).map((input) => input.value);
   }
   return element.value;
 }
@@ -293,9 +322,17 @@ function applyPayload(payload) {
   uiSpec.sections.forEach((section) => {
     section.fields.forEach((field) => {
       const element = document.getElementById(field.id);
+      if (!element) {
+        return;
+      }
       const value = payload[field.id];
       if (field.type === "boolean") {
         element.value = value === null || value === undefined ? "" : String(value);
+      } else if (field.type === "multiselect") {
+        const selected = new Set(value || []);
+        element.querySelectorAll('input[type="checkbox"]').forEach((input) => {
+          input.checked = selected.has(input.value);
+        });
       } else {
         element.value = value ?? "";
       }

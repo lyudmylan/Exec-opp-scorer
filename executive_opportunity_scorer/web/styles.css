@@ -105,6 +105,24 @@ pre { color: var(--muted); }
   display: grid;
   gap: 6px;
 }
+.multi-select {
+  display: grid;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.9);
+}
+.multi-select-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 400;
+}
+.multi-select-option input {
+  width: auto;
+  margin: 0;
+}
 .field label,
 .evidence-item label {
   font-size: 0.92rem;

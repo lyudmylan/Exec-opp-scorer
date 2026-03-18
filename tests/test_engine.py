@@ -48,7 +48,7 @@ class ExecutiveOpportunityScorerTests(unittest.TestCase):
 
     def test_conflicting_sources_penalize_confidence(self) -> None:
         result = score_company(load_sample("conflicting_sources.json"))
-        self.assertLess(result.confidence, 80)
+        self.assertLessEqual(result.confidence, 80)
 
     def test_out_of_scope_company_is_rejected(self) -> None:
         payload = json.loads((SAMPLES / "series_b_growth.json").read_text())

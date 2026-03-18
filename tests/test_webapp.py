@@ -20,7 +20,6 @@ class WebAppTests(unittest.TestCase):
         spec = load_ui_spec()
         payload = {
             "company_name": "TestCo",
-            "snapshot_date": "2026-03-12",
             "geography": "Israel",
             "category": "SaaS",
             "is_gray_area": False,
@@ -39,6 +38,7 @@ class WebAppTests(unittest.TestCase):
             }
         }
         normalized = coerce_submission(spec, payload)
+        self.assertEqual(normalized["snapshot_date"], date.today().isoformat())
         self.assertEqual(normalized["team_size"], 120)
         self.assertEqual(normalized["source_urls_text"], "https://example.com/testco-headcount")
         self.assertEqual(normalized["evidence"]["team_size_band"][0]["label"], "Headcount review")
@@ -50,6 +50,25 @@ class WebAppTests(unittest.TestCase):
                 spec,
                 {
                     "company_stage": "Series A",
+                },
+            )
+
+    def test_submission_rejects_incomplete_evidence_rows(self) -> None:
+        spec = load_ui_spec()
+        with self.assertRaisesRegex(Exception, "observed_at"):
+            coerce_submission(
+                spec,
+                {
+                    "company_name": "TestCo",
+                    "evidence": {
+                        "stage": [
+                            {
+                                "source_type": "funding",
+                                "label": "Funding announcement",
+                                "url": "https://example.com/funding"
+                            }
+                        ]
+                    },
                 },
             )
 

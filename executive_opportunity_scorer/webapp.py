@@ -40,11 +40,12 @@ def build_template_from_spec(spec: dict[str, Any]) -> dict[str, Any]:
 def coerce_submission(spec: dict[str, Any], payload: dict[str, Any]) -> dict[str, Any]:
     normalized = build_template_from_spec(spec)
     evidence_payload = payload.get("evidence", {})
+    evidence_fields = spec.get("evidence_entry", {}).get("fields", [])
 
     for section in spec.get("sections", []):
         for field in section.get("fields", []):
             field_id = field["id"]
-            raw_value = payload.get(field_id, field.get("default"))
+            raw_value = payload.get(field_id, _default_value(field))
             normalized[field_id] = _coerce_value(field, raw_value)
 
             if field.get("required") and normalized[field_id] in (None, ""):
@@ -53,7 +54,9 @@ def coerce_submission(spec: dict[str, Any], payload: dict[str, Any]) -> dict[str
             evidence_key = field.get("evidence_key")
             if evidence_key:
                 normalized["evidence"][evidence_key] = _normalize_evidence_items(
-                    evidence_payload.get(evidence_key, [])
+                    evidence_payload.get(evidence_key, []),
+                    evidence_fields,
+                    evidence_key,
                 )
 
     return normalized
@@ -95,11 +98,21 @@ def _coerce_value(field: dict[str, Any], raw_value: Any) -> Any:
     return raw_value
 
 
-def _normalize_evidence_items(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def _normalize_evidence_items(items: list[dict[str, Any]], field_defs: list[dict[str, Any]], evidence_key: str) -> list[dict[str, Any]]:
     normalized: list[dict[str, Any]] = []
+    required_fields = {field["id"] for field in field_defs if field.get("required")}
     for item in items:
         if not any(str(value).strip() for value in item.values() if value is not None):
             continue
+        missing_required = [
+            field_id
+            for field_id in required_fields
+            if not str(item.get(field_id, "")).strip()
+        ]
+        if missing_required:
+            raise WebAppError(
+                f"Evidence for `{evidence_key}` is missing required fields: {', '.join(sorted(missing_required))}."
+            )
         normalized.append(
             {
                 "source_type": item.get("source_type", "").strip(),

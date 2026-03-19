@@ -8,6 +8,8 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
 
+from urllib.parse import urlparse
+
 from .engine import score_company, score_to_dict
 from .models import CompanyInput
 from . import storage
@@ -254,6 +256,10 @@ class ScorerRequestHandler(BaseHTTPRequestHandler):
         company_name = payload.get("company_name", "").strip()
         if not company_url:
             self._send_json(HTTPStatus.BAD_REQUEST, {"error": "company_url is required."})
+            return
+        parsed = urlparse(company_url)
+        if parsed.scheme not in {"http", "https"}:
+            self._send_json(HTTPStatus.BAD_REQUEST, {"error": "company_url must use http or https."})
             return
         result = enricher.enrich_from_url(company_url, company_name)
         if "error" in result:

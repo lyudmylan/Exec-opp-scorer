@@ -454,6 +454,9 @@ def _build_timing_window(company: CompanyInput) -> str:
         return "Blocked"
 
     stage = (company.company_stage or "").lower()
+    if stage in {"series d", "growth", "public"}:
+        return "Late"  # Past the typical VP R&D inflection window
+
     if stage in {"pre-seed", "seed"} and (company.team_size or 0) < 20:
         return "Early"
 

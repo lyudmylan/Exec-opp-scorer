@@ -26,12 +26,15 @@ def enrich_from_url(company_url: str, company_name: str = "") -> dict[str, Any]:
     prompt = _build_prompt(company_url, company_name, page_content)
 
     client = anthropic.Anthropic(api_key=api_key)
-    message = client.messages.create(
-        model="claude-sonnet-4-6",
-        max_tokens=1024,
-        messages=[{"role": "user", "content": prompt}],
-    )
-    return _parse_response(message.content[0].text.strip())
+    try:
+        message = client.messages.create(
+            model="claude-sonnet-4-6",
+            max_tokens=1024,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        return _parse_response(message.content[0].text.strip())
+    except Exception as exc:
+        return {"error": f"Claude API error: {exc}"}
 
 
 def _fetch_url(url: str) -> str:

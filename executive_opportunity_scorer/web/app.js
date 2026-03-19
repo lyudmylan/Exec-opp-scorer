@@ -1,3 +1,12 @@
+/* ─── Constants ───────────────────────────────────────────────────────────── */
+const TIMING_CSS = {
+  optimal: "timing-optimal",
+  good:    "timing-good",
+  early:   "timing-early",
+  late:    "timing-late",
+  blocked: "timing-blocked",
+};
+
 /* ─── State ───────────────────────────────────────────────────────────────── */
 let uiSpec = null;
 let lastResult = null;
@@ -329,9 +338,9 @@ function renderResult(r) {
   const angle = r.approach_angle || "";
   const timing= r.timing_window  || "Unclear";
 
-  const riskClass = risk >= 60 ? "risk-high" : risk >= 40 ? "risk-med" : "risk-low";
-  const timingKey = timing.toLowerCase().replace(" ", "-");
-  const recClass  = rec === "Pursue now" ? "rec-pursue" : rec === "Monitor" ? "rec-monitor" : "rec-low";
+  const riskClass   = risk >= 60 ? "risk-high" : risk >= 40 ? "risk-med" : "risk-low";
+  const timingClass = TIMING_CSS[timing.toLowerCase()] || "timing-unclear";
+  const recClass    = rec === "Pursue now" ? "rec-pursue" : rec === "Monitor" ? "rec-monitor" : "rec-low";
 
   const posHtml = (r.top_positive_signals || []).map((s) =>
     `<span class="signal-pill signal-pos">${esc(s)}</span>`).join("");
@@ -365,7 +374,7 @@ function renderResult(r) {
       <div class="metric">
         <div class="metric-label">Timing</div>
         <div class="metric-value" style="font-size:13px;padding-top:4px">
-          <span class="timing-badge timing-${timingKey}">${esc(timing)}</span>
+          <span class="timing-badge ${timingClass}">${esc(timing)}</span>
         </div>
       </div>
     </div>
@@ -540,8 +549,8 @@ function renderPipeline(entries) {
 function buildPipelineEntry(e) {
   const risk = e.risk_score || 0;
   const riskChipClass = risk >= 60 ? "chip-risk-high" : risk >= 40 ? "chip-risk-med" : "chip-risk-low";
-  const timingKey = (e.timing_window || "unclear").toLowerCase().replace(" ", "-");
-  const recClass  = e.recommendation === "Pursue now" ? "rec-pursue" : e.recommendation === "Monitor" ? "rec-monitor" : "rec-low";
+  const timingClass   = TIMING_CSS[(e.timing_window || "").toLowerCase()] || "timing-unclear";
+  const recClass      = e.recommendation === "Pursue now" ? "rec-pursue" : e.recommendation === "Monitor" ? "rec-monitor" : "rec-low";
   const date = (e.created_at || "").slice(0, 10);
 
   const entry = document.createElement("div");
@@ -556,7 +565,7 @@ function buildPipelineEntry(e) {
     </div>
     <span class="score-chip chip-fit">Fit ${e.fit_score ?? "—"}</span>
     <span class="score-chip ${riskChipClass}">Risk ${e.risk_score ?? "—"}</span>
-    <span class="timing-badge timing-${timingKey}">${esc(e.timing_window || "Unclear")}</span>
+    <span class="timing-badge ${timingClass}">${esc(e.timing_window || "Unclear")}</span>
     <span class="rec-pill ${recClass}" style="font-size:12px;padding:4px 10px">${esc(e.recommendation || "—")}</span>
     <button class="btn-danger" data-id="${e.id}" type="button">Delete</button>
   `;

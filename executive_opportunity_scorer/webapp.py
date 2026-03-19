@@ -8,8 +8,12 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
 
+from urllib.parse import urlparse
+
 from .engine import score_company, score_to_dict
 from .models import CompanyInput
+from . import storage
+from . import enricher
 
 PACKAGE_ROOT = Path(__file__).resolve().parent
 PROJECT_ROOT = PACKAGE_ROOT.parent
@@ -180,17 +184,49 @@ class ScorerRequestHandler(BaseHTTPRequestHandler):
         if self.path == "/api/demo":
             self._send_json(HTTPStatus.OK, json.loads(DEMO_SAMPLE_PATH.read_text()))
             return
+        if self.path == "/api/pipeline":
+            self._send_json(HTTPStatus.OK, {"entries": storage.list_pipeline()})
+            return
         self._send_json(HTTPStatus.NOT_FOUND, {"error": "Not found"})
 
     def do_POST(self) -> None:  # noqa: N802
-        if self.path != "/api/score":
-            self._send_json(HTTPStatus.NOT_FOUND, {"error": "Not found"})
-            return
-
         try:
             length = int(self.headers.get("Content-Length", "0"))
             body = self.rfile.read(length).decode("utf-8")
             payload = json.loads(body or "{}")
+        except json.JSONDecodeError:
+            self._send_json(HTTPStatus.BAD_REQUEST, {"error": "Request body must be valid JSON."})
+            return
+
+        if self.path == "/api/score":
+            self._handle_score(payload)
+            return
+        if self.path == "/api/pipeline":
+            self._handle_pipeline_save(payload)
+            return
+        if self.path == "/api/enrich":
+            self._handle_enrich(payload)
+            return
+        self._send_json(HTTPStatus.NOT_FOUND, {"error": "Not found"})
+
+    def do_DELETE(self) -> None:  # noqa: N802
+        if self.path.startswith("/api/pipeline/"):
+            id_str = self.path[len("/api/pipeline/"):]
+            try:
+                entry_id = int(id_str)
+            except ValueError:
+                self._send_json(HTTPStatus.BAD_REQUEST, {"error": "Invalid pipeline entry id."})
+                return
+            deleted = storage.delete_entry(entry_id)
+            if deleted:
+                self._send_json(HTTPStatus.OK, {"deleted": entry_id})
+            else:
+                self._send_json(HTTPStatus.NOT_FOUND, {"error": "Entry not found."})
+            return
+        self._send_json(HTTPStatus.NOT_FOUND, {"error": "Not found"})
+
+    def _handle_score(self, payload: dict[str, Any]) -> None:
+        try:
             spec = load_ui_spec()
             normalized = coerce_submission(spec, payload)
             result = score_company(CompanyInput.from_dict(normalized))
@@ -205,8 +241,31 @@ class ScorerRequestHandler(BaseHTTPRequestHandler):
             self._send_json(HTTPStatus.BAD_REQUEST, {"error": str(exc)})
         except ValueError as exc:
             self._send_json(HTTPStatus.BAD_REQUEST, {"error": str(exc)})
-        except json.JSONDecodeError:
-            self._send_json(HTTPStatus.BAD_REQUEST, {"error": "Request body must be valid JSON."})
+
+    def _handle_pipeline_save(self, payload: dict[str, Any]) -> None:
+        result = payload.get("result")
+        input_data = payload.get("input")
+        if not result or not result.get("company_name"):
+            self._send_json(HTTPStatus.BAD_REQUEST, {"error": "Missing result or company_name."})
+            return
+        entry_id = storage.save_result(result, input_data)
+        self._send_json(HTTPStatus.OK, {"id": entry_id, "saved": True})
+
+    def _handle_enrich(self, payload: dict[str, Any]) -> None:
+        company_url = payload.get("company_url", "").strip()
+        company_name = payload.get("company_name", "").strip()
+        if not company_url:
+            self._send_json(HTTPStatus.BAD_REQUEST, {"error": "company_url is required."})
+            return
+        parsed = urlparse(company_url)
+        if parsed.scheme not in {"http", "https"}:
+            self._send_json(HTTPStatus.BAD_REQUEST, {"error": "company_url must use http or https."})
+            return
+        result = enricher.enrich_from_url(company_url, company_name)
+        if "error" in result:
+            self._send_json(HTTPStatus.BAD_REQUEST, result)
+        else:
+            self._send_json(HTTPStatus.OK, result)
 
     def log_message(self, format: str, *args: Any) -> None:  # noqa: A003
         return
@@ -233,8 +292,9 @@ class ScorerRequestHandler(BaseHTTPRequestHandler):
 
 
 def run_server(host: str = "127.0.0.1", port: int = 8000) -> None:
+    storage.init_db()
     server = ThreadingHTTPServer((host, port), ScorerRequestHandler)
-    print(f"Executive Opportunity Scorer UI running at http://{host}:{port}")
+    print(f"Executive Opportunity Scorer running at http://{host}:{port}")
     try:
         server.serve_forever()
     except KeyboardInterrupt:

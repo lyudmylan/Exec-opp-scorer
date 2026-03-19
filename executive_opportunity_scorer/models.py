@@ -87,6 +87,8 @@ class ScoreResult:
     top_risk_signals: list[str]
     fired_signals: list[SignalResult]
     sources_used: list[Evidence]
+    approach_angle: str = ""
+    timing_window: str = "Unclear"
 
 
 def parse_iso_date(value: str) -> date:

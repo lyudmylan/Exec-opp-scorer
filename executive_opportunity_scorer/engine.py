@@ -56,6 +56,8 @@ def score_company(company: CompanyInput) -> ScoreResult:
     blockers = _top_blockers(signals)
     explanation = _build_explanation(company, fit_score, risk_score, confidence, recommendation, positive_signals, risk_signals, blockers)
     next_steps = _build_next_steps(recommendation, confidence, risk_score)
+    approach_angle = _build_approach_angle(company, recommendation)
+    timing_window = _build_timing_window(company)
 
     sources = list(_unique_sources(company.evidence.values()))
     return ScoreResult(
@@ -71,6 +73,8 @@ def score_company(company: CompanyInput) -> ScoreResult:
         top_risk_signals=risk_signals,
         fired_signals=signals,
         sources_used=sources,
+        approach_angle=approach_angle,
+        timing_window=timing_window,
     )
 
 
@@ -441,6 +445,93 @@ def _build_next_steps(recommendation: str, confidence: int, risk_score: int) -> 
     if risk_score >= 70:
         steps.append("Treat risk as a gating factor even if future growth signals improve.")
     return steps
+
+
+def _build_timing_window(company: CompanyInput) -> str:
+    freeze = (company.hiring_freeze_signal or "").lower()
+    layoff = (company.layoff_signal or "").lower()
+    if freeze in {"high", "medium"} or layoff == "high":
+        return "Blocked"
+
+    stage = (company.company_stage or "").lower()
+    if stage in {"pre-seed", "seed"} and (company.team_size or 0) < 20:
+        return "Early"
+
+    months = company.recent_funding_months_ago
+    roles = company.hiring_open_roles or 0
+    growth = company.employee_growth_6m_pct
+
+    if months is not None:
+        if months <= 6 and roles >= 5:
+            return "Optimal"
+        if months <= 12 and roles >= 3:
+            return "Good"
+        if months <= 18:
+            return "Good"
+        if months > 24 and roles < 3:
+            return "Late"
+
+    if growth is not None and growth <= -10:
+        return "Late"
+    if roles >= 5:
+        return "Good"
+    return "Unclear"
+
+
+def _build_approach_angle(company: CompanyInput, recommendation: str) -> str:
+    exec_layer = (company.existing_exec_layer or "").lower()
+    founder = (company.founder_setup or "").lower()
+    gap = (company.leadership_gap or "").lower()
+    churn = (company.senior_churn or "").lower()
+    geo = company.geo_expansion or False
+    stage = (company.company_stage or "").lower()
+
+    if founder == "non_technical":
+        contact = "Approach the CEO directly — they own this decision without technical bias."
+    elif exec_layer == "partial":
+        contact = "Approach the CEO or Co-Founder CTO — the decision likely sits with both."
+    elif exec_layer == "strong":
+        contact = "A warm intro through a board member or shared investor is the most effective path."
+    else:
+        contact = "Approach the CEO or co-founders through a warm intro where possible."
+
+    if exec_layer == "none" and founder == "non_technical":
+        pitch = (
+            "Position yourself as the engineering counterpart to the CEO — the executive who owns R&D "
+            "end-to-end so the founder can stay focused on product and revenue."
+        )
+    elif exec_layer == "none" and gap == "high":
+        pitch = (
+            "The engineering org is at an inflection point. Lead with your track record of scaling "
+            "teams through the current-to-double headcount transition."
+        )
+    elif churn in {"high", "medium"} and gap in {"high", "medium"}:
+        pitch = (
+            "Frame your value as stability: owning engineering culture, retaining senior talent, "
+            "and giving the founding team confidence in the technical org during a critical period."
+        )
+    elif geo:
+        pitch = (
+            "Multi-site R&D coordination is a compounding challenge. Lead with your experience "
+            "managing distributed engineering organizations across time zones."
+        )
+    elif stage == "series a" and exec_layer == "none":
+        pitch = (
+            "This is a founding VP R&D opportunity — build the engineering function from scratch "
+            "alongside the founding team and shape both architecture and culture."
+        )
+    elif recommendation == "Monitor":
+        pitch = (
+            "Timing isn't optimal yet, but this company is worth warming now. "
+            "Use the next 60-90 days to build visibility with the team before the need becomes urgent."
+        )
+    else:
+        pitch = (
+            "Research the founding team's technical background and identify a shared connection — "
+            "investor, advisor, or alumni — to maximize response rate on first outreach."
+        )
+
+    return f"{pitch} {contact}"
 
 
 def _unique_sources(groups: Iterable[list[Evidence]]) -> Iterable[Evidence]:

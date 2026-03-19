@@ -165,26 +165,27 @@ def _normalize_evidence_items(items: list[dict[str, Any]], field_defs: list[dict
 
 class ScorerRequestHandler(BaseHTTPRequestHandler):
     def do_GET(self) -> None:  # noqa: N802
-        if self.path in {"/", "/index.html"}:
+        path = urlparse(self.path).path
+        if path in {"/", "/index.html"}:
             self._serve_file("index.html", "text/html; charset=utf-8")
             return
-        if self.path == "/app.js":
+        if path == "/app.js":
             self._serve_file("app.js", "application/javascript; charset=utf-8")
             return
-        if self.path == "/styles.css":
+        if path == "/styles.css":
             self._serve_file("styles.css", "text/css; charset=utf-8")
             return
-        if self.path == "/api/ui-spec":
+        if path == "/api/ui-spec":
             self._send_json(HTTPStatus.OK, load_ui_spec())
             return
-        if self.path == "/api/template":
+        if path == "/api/template":
             spec = load_ui_spec()
             self._send_json(HTTPStatus.OK, build_template_from_spec(spec))
             return
-        if self.path == "/api/demo":
+        if path == "/api/demo":
             self._send_json(HTTPStatus.OK, json.loads(DEMO_SAMPLE_PATH.read_text()))
             return
-        if self.path == "/api/pipeline":
+        if path == "/api/pipeline":
             self._send_json(HTTPStatus.OK, {"entries": storage.list_pipeline()})
             return
         self._send_json(HTTPStatus.NOT_FOUND, {"error": "Not found"})
@@ -198,20 +199,22 @@ class ScorerRequestHandler(BaseHTTPRequestHandler):
             self._send_json(HTTPStatus.BAD_REQUEST, {"error": "Request body must be valid JSON."})
             return
 
-        if self.path == "/api/score":
+        req_path = urlparse(self.path).path
+        if req_path == "/api/score":
             self._handle_score(payload)
             return
-        if self.path == "/api/pipeline":
+        if req_path == "/api/pipeline":
             self._handle_pipeline_save(payload)
             return
-        if self.path == "/api/enrich":
+        if req_path == "/api/enrich":
             self._handle_enrich(payload)
             return
         self._send_json(HTTPStatus.NOT_FOUND, {"error": "Not found"})
 
     def do_DELETE(self) -> None:  # noqa: N802
-        if self.path.startswith("/api/pipeline/"):
-            id_str = self.path[len("/api/pipeline/"):]
+        del_path = urlparse(self.path).path
+        if del_path.startswith("/api/pipeline/"):
+            id_str = del_path[len("/api/pipeline/"):]
             try:
                 entry_id = int(id_str)
             except ValueError:

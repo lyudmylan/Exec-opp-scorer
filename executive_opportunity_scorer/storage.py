@@ -68,7 +68,7 @@ def list_pipeline() -> list[dict[str, Any]]:
             SELECT id, company_name, snapshot_date, fit_score, risk_score, confidence,
                    recommendation, timing_window, approach_angle, created_at
             FROM pipeline
-            ORDER BY created_at DESC
+            ORDER BY id DESC
             """
         ).fetchall()
         return [dict(row) for row in rows]

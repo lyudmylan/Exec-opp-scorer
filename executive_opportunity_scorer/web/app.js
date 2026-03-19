@@ -373,7 +373,7 @@ function renderResult(r) {
       </div>
       <div class="metric">
         <div class="metric-label">Timing</div>
-        <div class="metric-value" style="font-size:13px;padding-top:4px">
+        <div class="metric-timing">
           <span class="timing-badge ${timingClass}">${esc(timing)}</span>
         </div>
       </div>
@@ -566,7 +566,7 @@ function buildPipelineEntry(e) {
     <span class="score-chip chip-fit">Fit ${e.fit_score ?? "—"}</span>
     <span class="score-chip ${riskChipClass}">Risk ${e.risk_score ?? "—"}</span>
     <span class="timing-badge ${timingClass}">${esc(e.timing_window || "Unclear")}</span>
-    <span class="rec-pill ${recClass}" style="font-size:12px;padding:4px 10px">${esc(e.recommendation || "—")}</span>
+    <span class="rec-pill ${recClass}">${esc(e.recommendation || "—")}</span>
     <button class="btn-danger" data-id="${e.id}" type="button">Delete</button>
   `;
 

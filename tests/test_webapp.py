@@ -63,6 +63,28 @@ class WebAppTests(unittest.TestCase):
         )
         self.assertEqual(normalized["existing_exec_layer"], "strong")
 
+    def test_standalone_vp_engineering_maps_to_partial_exec_layer(self) -> None:
+        spec = load_ui_spec()
+        normalized = coerce_submission(
+            spec,
+            {
+                "company_name": "VpLedCo",
+                "current_engineering_leadership": ["VP Engineering"],
+            },
+        )
+        self.assertEqual(normalized["existing_exec_layer"], "partial")
+
+    def test_standalone_head_of_engineering_maps_to_partial_exec_layer(self) -> None:
+        spec = load_ui_spec()
+        normalized = coerce_submission(
+            spec,
+            {
+                "company_name": "HeadLedCo",
+                "current_engineering_leadership": ["Head of Engineering"],
+            },
+        )
+        self.assertEqual(normalized["existing_exec_layer"], "partial")
+
     def test_founder_cto_plus_head_maps_to_strong_exec_layer(self) -> None:
         spec = load_ui_spec()
         normalized = coerce_submission(

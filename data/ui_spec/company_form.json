@@ -71,6 +71,15 @@
           "default": "",
           "placeholder": "Paste 1-3 URLs, one per line",
           "help": "Optional links for later verification or future automated research."
+        },
+        {
+          "id": "research_notes",
+          "label": "Research notes",
+          "type": "textarea",
+          "required": false,
+          "default": "",
+          "placeholder": "Manual or AI-generated notes about leadership signals",
+          "help": "Optional notes used to validate the VP R&D hiring hypothesis."
         }
       ]
     },

@@ -23,7 +23,7 @@ Enter a few quick-triage facts about a company and get a scored, explainable ver
 - **Approach angle** — tells you what to pitch and who to contact based on the strongest signals (non-technical founder → CEO directly; leadership gap → scaling inflection pitch; senior churn → stability framing)
 - **Timing window** — derived from funding recency + hiring momentum; tells you whether now is the right moment to reach out
 - **Pipeline** — save scored companies, track them over time, delete when done; persisted to `pipeline.db` (SQLite)
-- **LLM enrichment** — "Enrich from URL" button calls Claude to pre-fill company stage, team size, and engineering leadership from a company URL (requires `ANTHROPIC_API_KEY`)
+- **LLM enrichment** — "Enrich from URL" calls OpenAI to pre-fill company stage, team size, engineering leadership, and research notes from a company URL (requires `OPENAI_API_KEY`)
 - **Explainable heuristics** — weighted signals, not ML; every score is traceable to evidence
 
 ## Design Principles
@@ -59,9 +59,9 @@ python3 -m executive_opportunity_scorer.cli serve-ui --port 9000      # differen
 python3 -m executive_opportunity_scorer.cli serve-ui --host 0.0.0.0   # expose on network
 ```
 
-To enable LLM enrichment, set your Anthropic API key before starting:
+To enable LLM enrichment, set your OpenAI API key before starting:
 ```bash
-ANTHROPIC_API_KEY=sk-ant-... python3 -m executive_opportunity_scorer.cli serve-ui
+OPENAI_API_KEY=sk-... python3 -m executive_opportunity_scorer.cli serve-ui
 ```
 
 ## CLI Usage

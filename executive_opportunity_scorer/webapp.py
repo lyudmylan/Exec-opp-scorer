@@ -130,7 +130,7 @@ def _derive_exec_layer(roles: Any) -> str | None:
         return "strong"
     if has_founder_cto and has_vp_or_head:
         return "strong"
-    if has_founder_cto:
+    if has_founder_cto or has_vp_or_head:
         return "partial"
     return "none"
 

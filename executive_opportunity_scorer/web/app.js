@@ -593,10 +593,19 @@ function buildPipelineEntry(e) {
   // Delete
   row.querySelector(".btn-danger").addEventListener("click", async (ev) => {
     ev.stopPropagation();
-    const id = ev.target.dataset.id;
-    await fetch(`/api/pipeline/${id}`, { method: "DELETE" });
-    entry.remove();
-    await refreshPipelineBadge();
+    const button = ev.currentTarget;
+    const id = button.dataset.id;
+    button.disabled = true;
+    try {
+      const res = await fetch(`/api/pipeline/${id}`, { method: "DELETE" });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Delete failed.");
+      await loadPipeline();
+      await refreshPipelineBadge();
+    } catch (err) {
+      button.disabled = false;
+      alert("Could not delete: " + err.message);
+    }
   });
 
   return entry;

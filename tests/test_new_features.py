@@ -230,15 +230,47 @@ class EnricherTests(unittest.TestCase):
         with patch.dict("os.environ", {}, clear=True):
             result = enricher.enrich_from_url("https://example.com")
         self.assertIn("error", result)
-        self.assertIn("ANTHROPIC_API_KEY", result["error"])
+        self.assertIn("OPENAI_API_KEY", result["error"])
 
-    def test_missing_anthropic_package_returns_error(self) -> None:
+    def test_successful_openai_response_returns_parsed_payload(self) -> None:
         from executive_opportunity_scorer import enricher
-        import sys
-        with patch.dict("os.environ", {"ANTHROPIC_API_KEY": "sk-test"}):
-            with patch.dict(sys.modules, {"anthropic": None}):
-                result = enricher.enrich_from_url("https://example.com")
-        self.assertIn("error", result)
+        fake_payload = {
+            "choices": [
+                {
+                    "message": {
+                        "content": json.dumps(
+                            {
+                                "company_stage": "series b",
+                                "team_size": 120,
+                                "current_engineering_leadership": ["CTO"],
+                                "source_urls_text": "https://example.com/about",
+                                "research_notes": "Leadership looks established but still scaling.",
+                            }
+                        )
+                    }
+                }
+            ]
+        }
+
+        class _FakeResponse:
+            def __enter__(self):
+                return self
+
+            def __exit__(self, exc_type, exc, tb):
+                return False
+
+            def read(self):
+                return json.dumps(fake_payload).encode("utf-8")
+
+        with patch.dict("os.environ", {"OPENAI_API_KEY": "sk-test"}, clear=True):
+            with patch.object(enricher, "_fetch_url", return_value="Example page content"):
+                with patch("urllib.request.urlopen", return_value=_FakeResponse()):
+                    result = enricher.enrich_from_url("https://example.com", "ExampleCo")
+
+        self.assertEqual(result["company_stage"], "series b")
+        self.assertEqual(result["team_size"], 120)
+        self.assertEqual(result["current_engineering_leadership"], ["CTO"])
+        self.assertIn("research_notes", result)
 
     def test_parse_response_clean_json(self) -> None:
         from executive_opportunity_scorer.enricher import _parse_response
